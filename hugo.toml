@@ -1,4 +1,4 @@
-baseURL = 'https://nimpylib.org/'
+
 languageCode = 'en-us'
 title = 'Nim PyLib Site'
 theme = 'ananke'

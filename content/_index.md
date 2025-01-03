@@ -2,6 +2,8 @@
 date = '2025-01-03T21:04:15+08:00'
 draft = false
 title = 'home of NimPyLib'
+description = 'Library to write Python in Nim'
+keywords = ['Nim', 'Python', 'Library',  'nim-lang', 'lib']
 +++
 
 

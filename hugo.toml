@@ -7,12 +7,14 @@ theme = 'ananke'
 [menus]
   [[menus.main]]
     name = 'Docs'
-    pre = '<i class="fa fa-heart"></i>'
     url = 'https://docs.nimpylib.org/'
 
   [[menus.main]]
+    name = 'Repo'
+    url = 'https://github.com/nimpylib/pylib'
+
+  [[menus.main]]
     name = 'Wiki'
-    pre = '<i class="fa fa-heart"></i>'
     url = 'https://github.com/nimpylib/pylib/wiki'
 
 [Params]

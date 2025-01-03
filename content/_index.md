@@ -5,7 +5,7 @@ title = 'home of NimPyLib'
 +++
 
 
-> Write Python in [Nim][]!
+***Write Python in [Nim][]!***
 
 [Nim]: https://nim-lang.org
 [Python]: https://python.org

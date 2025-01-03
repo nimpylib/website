@@ -10,6 +10,9 @@ title = 'home of NimPyLib'
 [Nim]: https://nim-lang.org
 [Python]: https://python.org
 
-A collection of Python-like operators/functions and libraries as well as syntax sugars.
+Python-like operators/functions and libraries as well as syntax sugars
+
+in 
+<img alt=Nim src=img/nim_logo.svg height="7%" width="16%"></img>
 
 

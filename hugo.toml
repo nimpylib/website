@@ -20,3 +20,10 @@ theme = 'ananke'
 [Params]
   RepoURL = 'https://github.com/nimpylib/pylib'  
 
+  body_classes = "avenir bg-light-gray"
+
+# allow inline html in Markdown
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

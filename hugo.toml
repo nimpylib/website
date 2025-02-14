@@ -26,6 +26,9 @@ theme = 'ananke'
 
   body_classes = "avenir bg-light-gray"
 
+  recent_copy = "About"  # default: i18n "Recent Posts"
+  # We use it as a place for "about" instead of "Posts"
+
 # allow inline html in Markdown
 [markup]
   [markup.goldmark]

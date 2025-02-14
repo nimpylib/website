@@ -15,6 +15,6 @@ keywords = ['Nim', 'Python', 'Library',  'nim-lang', 'pylib', 'meta-programming'
 Python-like operators/functions and libraries as well as syntax sugars
 
 in 
-<img alt=Nim src=img/nim_logo.svg height="7%" width="16%"></img>
+[<img alt=Nim src=img/nim_logo.svg height="7%" width="16%"></img>][Nim]
 
 

@@ -36,6 +36,12 @@ theme = 'ananke'
     repo = "pylib"
     commit = "master"
 
+  [Params.ananke.social.github]
+    username = "nimpylib"
+
+  [Params.ananke.social.follow]
+    new_window_icon = true
+    networks = ['github']
 
 # allow inline html in Markdown
 [markup]

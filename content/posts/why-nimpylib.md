@@ -2,11 +2,9 @@
 date = '2025-02-14T20:01:12+08:00'
 draft = false
 title = 'Why Nimpylib'
+weight = 1
 +++
 
-<!--Copied from nimpylib/pylib README.md 34b29a95892c5652ade1794ff92b7363e5830d59
-but update link of mustRewriteExtern
--->
 
 It helps you to:
 - use much Python-like out-of-box API in Nim:
@@ -21,3 +19,10 @@ It helps you to:
   - unconvertible syntax from Python to Nim, e.g.
     [`end` keyword](https://github.com/nimpylib/pylib/blob/master/doc/mustRewriteExtern/endKeyword.md),
     [`not in` syntax](https://github.com/nimpylib/pylib/blob/master/doc/mustRewriteExtern/not-in.md)
+
+...
+
+
+
+> Copied from nimpylib/pylib README.md 34b29a95892c5652ade1794ff92b7363e5830d59
+but update link of mustRewriteExtern

@@ -1,17 +1,17 @@
 
-{{ $user := .user | default .Params.user }}
-{{ $repo := .repo | default .Params.repo }}
-{{ $branch := .branch | default .Params.branch | default "master" }}
+{{- $siteCfg := index .Site.Params.codeRepo 0 }}
+{{/* `$.Site.Params.codeRepo` is a 1-length slice */}}
 
-{{ $path := . }}
 
-{{ if ne (printf "%T" .) "string" }}
-  {{ $path = .path }}
+{{ $url := "" }}
+
+{{ with $siteCfg }}
+  {{ $branch := .branch | default "master" }}
+
+  {{ $url = ( printf $.urlFmt
+            .user .repo $branch $.path )
+  }}
+
 {{ end }}
-
-{{ $url := ( printf .urlFmt
-            $user $repo $branch $path )
-}}
-
 
 {{ return $url }}

@@ -7,4 +7,8 @@ weight = 2
 
 {{< code-demo "readme.nim" "python" >}}
 
-> see readme of github repo for detials
+> above is [readme-demo of github repo]( {{< repo-url "blob" "examples/readme.nim" >}} )
+
+---
+
+> see [examples]( {{< repo-url "tree" "examples" >}} ) for more demo

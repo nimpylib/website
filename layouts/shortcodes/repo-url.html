@@ -1,0 +1,22 @@
+
+{{- $cat := .Get 0 }}
+{{- $path := .Get 1 }}
+
+{{- if eq (len .Params) 1 }}
+  {{- $cat = "blob" }}
+  {{- $path = .Get 0 }}
+{{- end }}
+
+
+{{- $lastPartPath := "link-of-cat" }}
+
+{{- if eq $cat "raw"}}
+   {{- $lastPartPath = "raw"}}
+{{- end }}
+
+{{- partial (print "remote/url/" $lastPartPath) ( dict
+  "path" $path
+  "cat" $cat
+  "Context" .
+  ) }}
+

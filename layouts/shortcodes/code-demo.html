@@ -1,25 +1,22 @@
 
 {{- $pathPrefix := "examples" }}
 
+{{- $fn := .Get 0 }}
+
+{{- $path := printf "%s/%s" $pathPrefix $fn }}
+
 {{- if gt ( len .Params ) 1 }}
     {{- $.Scratch.Set "format" ( .Get 1 ) }}
 {{- else }}
-    {{- $splits := ( split ( .Get 0 ) "." ) }}
+    {{- $splits := ( split $fn "." ) }}
     {{- $splitsLength := ( len $splits ) }}
     {{- $format := ( index $splits ( sub $splitsLength 1 ) ) }}
     {{- $.Scratch.Set "format" $format }}
 {{- end }}
 
-{{- $file := ( .Get 0 ) }}
 {{- $format := ( $.Scratch.Get "format" ) }}
 
-{{- $siteCfg := index $.Site.Params.codeRepo 0 }}
-{{/* `$.Site.Params.codeRepo` is a 1-length slice */}}
-
 {{- print "```" $format "\n" ( 
-    partial "remote/url/raw" (
-        merge
-          $siteCfg
-          (dict "path" (printf "%s/%s" $pathPrefix $file))
+    partial "remote/url/raw" ( dict "path" $path "Context" .
     ) | partial "remote/getRemoteContent"
 ) "\n" "```" | markdownify }}

@@ -17,8 +17,8 @@ It helps you to:
 - gain a better view into different behaviors between Python and Nim:
   - `dynamically-typed` vs `statically-typed`
   - unconvertible syntax from Python to Nim, e.g.
-    [`end` keyword](https://github.com/nimpylib/pylib/blob/master/doc/mustRewriteExtern/endKeyword.md),
-    [`not in` syntax](https://github.com/nimpylib/pylib/blob/master/doc/mustRewriteExtern/not-in.md)
+    [`end` keyword]( {{< repo-url "doc/mustRewriteExtern/endKeyword.md" >}}),
+    [`not in` syntax]( {{< repo-url "doc/mustRewriteExtern/not-in.md" >}} )
 
 ...
 

@@ -1,5 +1,6 @@
 
-{{ $f := "https://raw.githubusercontent.com/%s/%s/refs/heads/%s/%s" }}
+
+{{ $f := print "https://github.com/%s/%s/" .cat "/%s/%s" }}
 
 {{ return partial "remote/url/_helper" ( dict
   "urlFmt" $f

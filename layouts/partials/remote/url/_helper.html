@@ -1,0 +1,17 @@
+
+{{ $user := .user | default .Params.user }}
+{{ $repo := .repo | default .Params.repo }}
+{{ $branch := .branch | default .Params.branch | default "master" }}
+
+{{ $path := . }}
+
+{{ if ne (printf "%T" .) "string" }}
+  {{ $path = .path }}
+{{ end }}
+
+{{ $url := ( printf .urlFmt
+            $user $repo $branch $path )
+}}
+
+
+{{ return $url }}

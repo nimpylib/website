@@ -1,0 +1,6 @@
+
+{{ $f := "https://raw.githubusercontent.com/%s/%s/refs/heads/%s/%s" }}
+
+{{ return partial "remote/url/_helper" (
+    merge . ( dict "urlFmt" $f ) )
+}}

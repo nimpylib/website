@@ -1,0 +1,18 @@
+
+{{ $url := . }}
+
+{{ $res := "" }}
+
+
+{{/* `try` is introduced in hugo 0.141 */}}
+{{ with try (resources.GetRemote $url ) }}
+  {{ with .Err }}
+    {{ errorf "%s" . }}
+  {{ else with .Value }}
+    {{ $res = .Content }}
+  {{ else }}
+    {{ errorf "Unable to get remote resource %q" $url }}
+  {{ end }}
+{{ end }}
+
+{{ return $res }}

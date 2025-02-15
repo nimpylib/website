@@ -31,6 +31,11 @@ theme = 'ananke'
 
   read_more_copy = "details"  # default: i18n "readMore" -> "read more"
 
+  [[Params.codeRepo]]
+    user = "nimpylib"
+    repo = "pylib"
+    branch = "master"
+
 
 # allow inline html in Markdown
 [markup]

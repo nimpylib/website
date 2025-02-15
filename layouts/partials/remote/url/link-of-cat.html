@@ -5,5 +5,6 @@
 {{ return partial "remote/url/_helper" ( dict
   "urlFmt" $f
   "path" .path
+  "commit" .commit
   "Site" .Context.Site
 )}}

@@ -6,10 +6,10 @@
 {{ $url := "" }}
 
 {{ with $siteCfg }}
-  {{ $branch := .branch | default "master" }}
+  {{ $commit := $.commit | default .commit | default "master" }}
 
   {{ $url = ( printf $.urlFmt
-            .user .repo $branch $.path )
+            .user .repo $commit $.path )
   }}
 
 {{ end }}

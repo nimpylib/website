@@ -1,22 +1,32 @@
+{{/*
+
+- repo-url[ cat] path
+- repo-url commit=<$.Site.Params...> cat="blob" path=<required>
+
+*/}}
+
+{{- $defCat := "blob" }}
 
 {{- $cat := .Get 0 }}
 {{- $path := .Get 1 }}
 
-{{- if eq (len .Params) 1 }}
-  {{- $cat = "blob" }}
+{{- if lt (len .Params) 2 }}
+  {{- $cat = $defCat }}
   {{- $path = .Get 0 }}
 {{- end }}
 
 
-{{- $lastPartPath := "link-of-cat" }}
-
-{{- if eq $cat "raw"}}
-   {{- $lastPartPath = "raw"}}
+{{- if .IsNamedParams }}
+  {{- $cat = .Params.cat | default $defCat }}
+  {{- $path = .Params.path }}
 {{- end }}
+
+{{- $lastPartPath := cond (eq $cat "raw") "raw" "link-of-cat" }}
 
 {{- partial (print "remote/url/" $lastPartPath) ( dict
   "path" $path
   "cat" $cat
+  "commit" (.Get "commit")
   "Context" .
   ) }}
 

@@ -17,12 +17,13 @@ It helps you to:
 - gain a better view into different behaviors between Python and Nim:
   - `dynamically-typed` vs `statically-typed`
   - unconvertible syntax from Python to Nim, e.g.
-    [`end` keyword]( {{< repo-url "doc/mustRewriteExtern/endKeyword.md" >}}),
-    [`not in` syntax]( {{< repo-url "doc/mustRewriteExtern/not-in.md" >}} )
+    [`end` keyword]({{<repo-url "doc/mustRewriteExtern/endKeyword.md" >}}),
+    [`not in` syntax]({{<repo-url "doc/mustRewriteExtern/not-in.md" >}})
 
 ...
 
 
-
-> Copied from nimpylib/pylib README.md 34b29a95892c5652ade1794ff92b7363e5830d59
-but update link of mustRewriteExtern
+> Copied from [repo's README.md](
+  {{< repo-url commit="34b29a95892c5652ade1794ff92b7363e5830d59"
+  path="README.md#why-nimpylib" >}})
+but update link of [mustRewriteExtern]({{<repo-url "tree" "mustRewriteExtern/">}})

@@ -34,7 +34,7 @@ theme = 'ananke'
   [[Params.codeRepo]]
     user = "nimpylib"
     repo = "pylib"
-    branch = "master"
+    commit = "master"
 
 
 # allow inline html in Markdown

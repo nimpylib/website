@@ -1,0 +1,2 @@
+{{- $pag := cond (eq (len .Params) 0) "" (.Get 0)}}
+{{- print "https://nim-lang.org/" $pag }}

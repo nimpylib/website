@@ -9,7 +9,7 @@ keywords = ['Nim', 'Python', 'Library',  'nim-lang', 'pylib', 'meta-programming'
 
 ***Write Python in [Nim][]!***
 
-[Nim]: https://nim-lang.org
+[Nim]: {{<url/nim>}}
 [Python]: https://python.org
 
 Python-like operators/functions and libraries as well as syntax sugars

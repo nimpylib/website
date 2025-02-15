@@ -31,7 +31,7 @@ theme = 'ananke'
 
   read_more_copy = "details"  # default: i18n "readMore" -> "read more"
 
-  [[Params.codeRepo]]
+  [Params.codeRepo]
     user = "nimpylib"
     repo = "pylib"
     commit = "master"

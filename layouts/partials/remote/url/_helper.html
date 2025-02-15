@@ -1,6 +1,5 @@
 
-{{- $siteCfg := index .Site.Params.codeRepo 0 }}
-{{/* `$.Site.Params.codeRepo` is a 1-length slice */}}
+{{- $siteCfg := .Site.Params.codeRepo }}
 
 
 {{ $url := "" }}

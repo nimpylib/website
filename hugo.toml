@@ -4,22 +4,15 @@ title = 'Nim PyLib Site'
 theme = 'ananke'
 
 
-[menus]
-  [[menus.main]]
-    name = 'Docs'
-    url = 'https://docs.nimpylib.org/'
+menus.main = [
+    {weight=10, name = 'Docs', url = 'https://docs.nimpylib.org'},
+    {weight=20, name = "Donate", url = "/donate/"},
+    {weight=30, name = 'Repo', url = 'https://github.com/nimpylib/pylib'},
+    {weight=40, name = 'Wiki', url = 'https://github.com/nimpylib/pylib/wiki'},
+    {weight=50, name = 'Install', url = '/install/'},
+]
 
-  [[menus.main]]
-    name = "Donate"
-    url = "/donate/"
-
-  [[menus.main]]
-    name = 'Repo'
-    url = 'https://github.com/nimpylib/pylib'
-
-  [[menus.main]]
-    name = 'Wiki'
-    url = 'https://github.com/nimpylib/pylib/wiki'
+# We used to use `[[menus.main]]`, but that's too many lines
 
 [Params]
   RepoURL = 'https://github.com/nimpylib/pylib'  

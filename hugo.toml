@@ -10,6 +10,7 @@ menus.main = [
     {weight=30, name = 'Repo', url = 'https://github.com/nimpylib/pylib'},
     {weight=40, name = 'Wiki', url = 'https://github.com/nimpylib/pylib/wiki'},
     {weight=50, name = 'Install', url = '/install/'},
+    {weight=60, name = 'Online Demo', url = 'https://play.nimpylib.org'},
 ]
 
 # We used to use `[[menus.main]]`, but that's too many lines

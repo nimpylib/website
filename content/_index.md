@@ -2,7 +2,7 @@
 date = '2025-01-03T21:04:15+08:00'
 draft = false
 title = 'home of NimPyLib'
-description = 'Library to write Python in Nim'
+description = 'Libraries to write Python in Nim'
 keywords = ['Nim', 'Python', 'Library',  'nim-lang', 'pylib', 'meta-programming']
 +++
 
@@ -18,7 +18,7 @@ in
 [<img alt=Nim src=img/nim_logo.svg height="7%" width="16%"></img>][Nim]
 
 <details id="repo-list">
-  <summary>children repos</summary>
+  <summary>Children Repos</summary>
   <ul id="repos"></ul>
 </details>
 <script>

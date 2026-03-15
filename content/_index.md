@@ -30,6 +30,17 @@ const owner = 'nimpylib';
 fetch(`https://api.github.com/users/${owner}/repos`)
   .then(r => r.json())
   .then(data => {
+    const style = document.createElement('style');
+    style.textContent = `
+      #repos li.repo-item { flex-wrap: wrap; gap: 8px; }
+      @media (max-width: 700px) {
+        #repos li.repo-item .rhs-badges {
+          flex-direction: column;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    //
     const ul = document.getElementById('repos');
     ul.style.display = 'grid';
     ul.style.gridTemplateColumns = 'max-content';
@@ -51,6 +62,7 @@ fetch(`https://api.github.com/users/${owner}/repos`)
     data.forEach(repo => {
       if (exclude_repos.includes(repo.name)) return;
       const li = document.createElement('li');
+      li.className = 'repo-item';
       li.style.display = 'flex';
       li.style.justifyContent = 'space-between';
       li.style.alignItems = 'center';
@@ -59,6 +71,7 @@ fetch(`https://api.github.com/users/${owner}/repos`)
       lhs.style.display = 'flex';
       //
       const rhs = document.createElement('div');
+      rhs.className = 'rhs-badges';
       rhs.style.display = 'flex';
       rhs.style.alignItems = 'flex-end';
       rhs.appendChild(badgeOf(repo.name, 'ci'));

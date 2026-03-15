@@ -26,7 +26,8 @@ const exclude_repos = ['.github',
   'template',
   'nimpylib', 'website'  // website is this website itself, nimpylib is the main repo
 ];
-fetch('https://api.github.com/users/nimpylib/repos')
+const owner = 'nimpylib';
+fetch(`https://api.github.com/users/${owner}/repos`)
   .then(r => r.json())
   .then(data => {
     const ul = document.getElementById('repos');
@@ -36,12 +37,32 @@ fetch('https://api.github.com/users/nimpylib/repos')
     ul.style.columnGap = '12px';
     ul.style.rowGap = '8px';
     ul.style.justifyContent = 'center';
+    const badgeOf = (repoName, ciName) => {
+      const ymlUrl = `https://github.com/${owner}/${repoName}/actions/workflows/${ciName}.yml`
+      const badgeUrl = `${ymlUrl}/badge.svg`
+      const img = document.createElement('img')
+      img.alt = "";
+      img.src = badgeUrl;
+      const result = document.createElement('a');
+      result.appendChild(img);
+      result.href = ymlUrl;
+      return result;
+    }
     data.forEach(repo => {
       if (exclude_repos.includes(repo.name)) return;
       const li = document.createElement('li');
       li.style.display = 'flex';
-      //li.style.justifyContent = 'space-between';
+      li.style.justifyContent = 'space-between';
       li.style.alignItems = 'center';
+      //
+      const lhs = document.createElement('div');
+      lhs.style.display = 'flex';
+      //
+      const rhs = document.createElement('div');
+      rhs.style.display = 'flex';
+      rhs.style.alignItems = 'flex-end';
+      rhs.appendChild(badgeOf(repo.name, 'ci'));
+      rhs.appendChild(badgeOf(repo.name, 'docs'));
       // 
       const web = document.createElement('a');
       web.href = repo.homepage || repo.html_url;
@@ -62,8 +83,10 @@ fetch('https://api.github.com/users/nimpylib/repos')
       gh_a.style.color = '#24292f';
       gh_a.style.fontSize = '0.95em';
       //
-      li.appendChild(gh_a);
-      li.appendChild(web);
+      lhs.appendChild(gh_a);
+      lhs.appendChild(web);
+      li.appendChild(lhs);
+      li.appendChild(rhs);
       ul.appendChild(li);
     });
   });

@@ -1,0 +1,58 @@
+
+  <style>
+    .wrap {
+      /*make 100% width of viewpoint and place left border to side*/
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+    }
+  </style>
+  <main class="wrap">
+    <section class="card">
+      <div id="graph">Loading Mermaid graph...</div>
+    </section>
+    <pre id="error"></pre>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({startOnLoad: false, securityLevel: "loose",
+    /* donno why doesn't work:
+      flowchart: {
+        defaultRenderer: "elk"
+      },
+      layout: "elk",
+      elk: {
+        mergeEdges: false,
+        nodePlacementStrategy: "LINEAR_SEGMENTS"
+      }
+    */
+    });
+
+    const graphId = 'graph';
+    const graphEl = document.getElementById(graphId);
+    const errorEl = document.getElementById("error");
+
+    async function renderGraph() {
+      errorEl.style.display = "none";
+      errorEl.textContent = "";
+
+      try {
+        const mermaidCode = await (await fetch("https://graph.api.nimpylib.org")).text();
+
+        const id = "mermaid-" + Date.now();
+
+        const { bindFunctions, svg } = await mermaid.render(id, mermaidCode, graphEl);
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+      } catch (err) {
+        graphEl.textContent = "Graph render failed.";
+        errorEl.style.display = "block";
+        errorEl.textContent = String(err && err.stack ? err.stack : err);
+      }
+    }
+
+    renderGraph();
+  </script>
+</body>
+
+

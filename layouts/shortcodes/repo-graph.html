@@ -4,54 +4,170 @@
       /*make 100% width of viewpoint and place left border to side*/
       width: 100vw;
       margin-left: calc(50% - 50vw);
+      height: 65vh;
+    }
+    .tab-switcher {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    #graph {height: 100%;}
+    .card {height: 100%;}
+
+    .tab-switcher button.active {
+      background: var(--aui-color, #222);
+      color: var(--aui-color-contrast, #fff);
+      border-color: var(--aui-color, #222);
     }
   </style>
   <main class="wrap">
     <section class="card">
+      <div id="tab-switcher" class="tab-switcher"></div>
       <div id="graph">Loading Mermaid graph...</div>
     </section>
     <pre id="error"></pre>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <!--<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>-->
   <script>
-    mermaid.initialize({startOnLoad: false, securityLevel: "loose",
-    /* donno why doesn't work:
-      flowchart: {
-        defaultRenderer: "elk"
-      },
-      layout: "elk",
-      elk: {
-        mergeEdges: false,
-        nodePlacementStrategy: "LINEAR_SEGMENTS"
-      }
-    */
-    });
-
     const graphId = 'graph';
     const graphEl = document.getElementById(graphId);
+    const tabSwitcherEl = document.getElementById("tab-switcher");
     const errorEl = document.getElementById("error");
+    const getGraphCode = async (outType) => await (
+      await fetch("https://graph.api.nimpylib.org/" + (outType?outType:""))
+    ).text();
 
-    async function renderGraph() {
+    const tabs = [];
+    const tabResultCache = new Map(); // tabResultCache
+
+    const registerTab = (nameOfTab, depString, cb) => tabs.push({ nameOfTab, depString, cb });
+
+    const loadDependency = (depString) => import(depString);
+
+    async function switchTab(nameOfTab) {
+      const selectedTab = tabs.find((t) => t.nameOfTab === nameOfTab);
+      if (!selectedTab) return;
+
+      for (const btn of tabSwitcherEl.querySelectorAll("button")) {
+        btn.classList.toggle("active", btn.dataset.tab === nameOfTab);
+      }
+
       errorEl.style.display = "none";
       errorEl.textContent = "";
 
+      // Provide a cache getter/setter for this tab
+      const cache = {
+        get: () => tabResultCache.get(nameOfTab),
+        set: (val) => tabResultCache.set(nameOfTab, val)
+      };
+
+      // If cached, let the callback handle rendering from cache
+      if (tabResultCache.has(nameOfTab)) {
+        const module = await loadDependency(selectedTab.depString);
+        await selectedTab.cb({ module, graphEl, errorEl, cache });
+        return;
+      }
+
       try {
-        const mermaidCode = await (await fetch("https://graph.api.nimpylib.org")).text();
-
-        const id = "mermaid-" + Date.now();
-
-        const { bindFunctions, svg } = await mermaid.render(id, mermaidCode, graphEl);
-        graphEl.innerHTML = svg;
-        bindFunctions?.(graphEl);
+        const module = await loadDependency(selectedTab.depString);
+        await selectedTab.cb({ module, graphEl, errorEl, cache });
       } catch (err) {
         graphEl.textContent = "Graph render failed.";
         errorEl.style.display = "block";
-        errorEl.textContent = String(err && err.stack ? err.stack : err);
+        errorEl.textContent = String(err);
+        throw err;
       }
     }
 
-    renderGraph();
+    function renderTabSwitcher() {
+      tabSwitcherEl.innerHTML = "";
+      for (const tab of tabs) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.dataset.tab = tab.nameOfTab;
+        btn.textContent = tab.nameOfTab;
+        btn.addEventListener("click", () => switchTab(tab.nameOfTab));
+        tabSwitcherEl.appendChild(btn);
+      }
+    }
+
+    const mermaidCb = async ({ module, graphEl, cache }) => {
+      // If cache exists, render from cache
+      const cached = cache.get?.();
+      if (cached) {
+        graphEl.innerHTML = cached;
+        return;
+      }
+      const mermaid = module.default || module;
+      mermaid.initialize({startOnLoad: false, securityLevel: "loose",
+      /* donno why doesn't work:
+        flowchart: {
+          defaultRenderer: "elk"
+        },
+        layout: "elk",
+        elk: {
+          mergeEdges: false,
+          nodePlacementStrategy: "LINEAR_SEGMENTS"
+        }
+      */
+      });
+
+      const mermaidCode = await getGraphCode();
+      const id = "mermaid-" + Date.now();
+      const { bindFunctions, svg } = await mermaid.render(id, mermaidCode, graphEl);
+      graphEl.innerHTML = svg;
+      bindFunctions?.(graphEl);
+      cache.set?.(svg);
+    };
+
+    const dotCb = async ({ module, graphEl: container, cache }) => {
+      // If cache exists, render from cache
+      const cached = cache.get?.();
+      const vis = module.default || module;
+      function makeOnlyPointOutHighlightable(d) {
+        const network = new vis.Network(container, d.data, d.options);
+        network.on('deselectNode', network.unselectAll);
+        network.on('selectNode', ({ nodes }) => {
+          const selectedNodeId = nodes[0];
+          // Get all edges connected to this node
+          const connectedEdges = network.getConnectedEdges(selectedNodeId);
+          // Filter to only outgoing edges (where 'from' === selectedNodeId)
+          const outgoingEdges = connectedEdges.filter(edgeId => network.body.edges[edgeId].from.id === selectedNodeId);
+          network.selectEdges(outgoingEdges);
+        });
+
+      }
+      if (cached) {
+        makeOnlyPointOutHighlightable(cached)
+        return;
+      }
+
+      let parseDOTNetwork = vis.parseDOTNetwork;
+      if (!parseDOTNetwork) parseDOTNetwork = vis.network.convertDot;
+
+      const DOTstring = await getGraphCode("dot");
+
+      const parsedData = parseDOTNetwork(DOTstring);
+
+      const data = {
+        nodes: parsedData.nodes,
+        edges: parsedData.edges
+      }
+
+      const options = parsedData.options;
+
+      // create a network
+      makeOnlyPointOutHighlightable({data, options});
+      cache.set?.({ data, options });
+    };
+
+    registerTab("mermaid", "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs", mermaidCb);
+    registerTab("vis-network", "https://cdnjs.cloudflare.com/ajax/libs/vis-network/10.0.2/dist/vis-network.esm.min.js", dotCb);
+    renderTabSwitcher();
+    switchTab(tabs[1].nameOfTab);
   </script>
 </body>
 

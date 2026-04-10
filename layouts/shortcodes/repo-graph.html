@@ -128,15 +128,48 @@
       const cached = cache.get?.();
       const vis = module.default || module;
       function makeOnlyPointOutHighlightable(d) {
-        const network = new vis.Network(container, d.data, d.options);
-        network.on('deselectNode', network.unselectAll);
+        const nodes = d.data.nodes;
+        const nodeIds = nodes.getIds().copyWithin();
+
+        function dimUnpointedNodes(selectedNodeId, pointedNodeIds) {
+          const connected = new Set(pointedNodeIds);
+          connected.add(selectedNodeId);
+
+          const updates = nodeIds.map(nodeId => ({
+            id: nodeId,
+            opacity: connected.has(nodeId) ? 1.0 : 0.2,
+          }));
+          nodes.update(updates);
+        }
+
+        function resetOpacity() {
+          const updates = nodeIds.map(nodeId => ({ id: nodeId, opacity: 1.0 }));
+          nodes.update(updates);
+        }
+        const options = {...d.options,
+          interaction: {
+            keyboard: true,
+          },
+        }
+
+        const network = new vis.Network(container, d.data, options);
+        const reset = () => {
+          network.unselectAll();
+          resetOpacity();
+        }
+        network.on('deselectNode', reset);
+        network.on('doubleClick', reset); // as deselect not fired as many as expected
+
         network.on('selectNode', ({ nodes }) => {
           const selectedNodeId = nodes[0];
-          // Get all edges connected to this node
+          if (selectedNodeId === undefined) {
+            reset();
+          }
           const connectedEdges = network.getConnectedEdges(selectedNodeId);
-          // Filter to only outgoing edges (where 'from' === selectedNodeId)
           const outgoingEdges = connectedEdges.filter(edgeId => network.body.edges[edgeId].from.id === selectedNodeId);
+          const outgoingNodeIds = outgoingEdges.map(edgeId => network.body.edges[edgeId].to.id);
           network.selectEdges(outgoingEdges);
+          dimUnpointedNodes(selectedNodeId, outgoingNodeIds);
         });
 
       }
@@ -153,7 +186,7 @@
       const parsedData = parseDOTNetwork(DOTstring);
 
       const data = {
-        nodes: parsedData.nodes,
+        nodes: new vis.DataSet(parsedData.nodes),
         edges: parsedData.edges
       }
 

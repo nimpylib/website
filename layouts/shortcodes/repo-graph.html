@@ -167,12 +167,30 @@
           interaction: {
             keyboard: true,
           },
+          edges: {
+            ...(d.options?.edges || {}),
+            font: {
+              ...(d.options?.edges?.font || {}),
+              size: 0,
+            },
+          },
         }
 
         const network = new vis.Network(container, d.data, options);
+        const edgeData = network.body.data.edges;
+        function setEdgeLabels(edgeIds, size) {
+          const updates = edgeIds.map((edgeId) => ({
+            id: edgeId,
+            font: { size },
+          }));
+          edgeData.update(updates);
+        }
+        function hideEdgeLabels() {setEdgeLabels(edgeData.getIds(), 0);}
+        function showEdgeLabels(edgeIds) {setEdgeLabels(edgeIds, 14);}
         const reset = () => {
           network.unselectAll();
           resetOpacity();
+          hideEdgeLabels();
         }
         network.on('deselectNode', reset);
         network.on('doubleClick', reset); // as deselect not fired as many as expected
@@ -186,9 +204,17 @@
           const outgoingEdges = connectedEdges.filter(edgeId => network.body.edges[edgeId].from.id === selectedNodeId);
           const outgoingNodeIds = outgoingEdges.map(edgeId => network.body.edges[edgeId].to.id);
           network.selectEdges(outgoingEdges);
+          hideEdgeLabels();
+          showEdgeLabels(outgoingEdges);
           dimUnpointedNodes(selectedNodeId, outgoingNodeIds);
         });
 
+        network.on('selectEdge', ({ edges }) => {
+          hideEdgeLabels();
+          showEdgeLabels(edges);
+        });
+
+        network.on('deselectEdge', hideEdgeLabels);
       }
       if (cached) {
         makeOnlyPointOutHighlightable(cached)
